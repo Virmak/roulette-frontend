@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="swfobject.min.js"></script>
+    <script src="bundle.js"></script>
+
+    <style>
+        body {
+            margin:0;
+            padding:0;
+            overflow:hidden;
+            user-select: none; 
+        }
+
+        canvas {
+            display:block;
+        }
+        
+        .rplayer {
+            width: 45%;
+            height: 37%;
+            z-index: 1000;
+            position: absolute;
+            left: -10px;
+            right: 0;
+            top: 10px;
+            margin: auto;
+            text-align: center;
+        }
+
+        .rplayer object {
+            width: 100%;
+            height: 100%;
+        }
+
+
+    </style>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const flashvars = {
+                streamType: 'Live',
+                autoPlay: false,
+                scaleMode: 'letterbox',
+                loop: true,
+                optimizeBuffering: true,
+                initialBufferTime: 0.1,
+                expandedBufferTime: 10,
+                minContinuousPlaybackTime: 30,
+                src: 'rtmp://xprogaming.fc.llnwd.net/xprogaming//AR1Lov2',
+                
+                javascriptCallbackFunction: "onJavaScriptBridgeCreated"
+              };
+
+                swfobject.embedSWF('StrobeMediaPlayback.swf','videoPlayer','410','200','10.0.0','false', flashvars, {
+                    allowfullscreen:'true',
+	                wmode: "direct",
+                    allowscriptaccess:'always',
+                    name: 'StrobeMediaPlayback.swf'
+                });
+
+                var player = null;
+                function onJavaScriptBridgeCreated(id){ console.log(id)
+                    if(player == null){
+                        player = document.getElementById(id);
+                        // other actions
+                        player.play();
+                    }
+                }
+        });
+    </script>
+</head>
+        <div class="rplayer">
+                <div id="videoPlayer" style="color: white;">
+                    Flash Required
+                </div>
+        </div>
+        
+
+</body>
+</html>

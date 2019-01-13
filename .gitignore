@@ -1,0 +1,4 @@
+dist/**/*.js
+dist/**/*.json
+node_modules
+public/bundle.js

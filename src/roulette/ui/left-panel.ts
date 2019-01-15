@@ -1,10 +1,15 @@
 import { IDrawable } from "../graphics/idrawable";
 import { Texture, Container } from "pixi.js";
+import { IGameStateObserver } from "../../igame-state-observer";
 
 
-export class LeftPanel implements IDrawable {
+export class LeftPanel implements IDrawable, IGameStateObserver {
     private container: Container;
     private textureCache: Texture[];
+
+    private roundIDTxt: PIXI.Text;
+    private dealerNameTxt: PIXI.Text;
+    private playerNameTxt: PIXI.Text;
 
     constructor(textureCache: PIXI.Texture[]) {
         this.textureCache = textureCache;
@@ -74,6 +79,30 @@ export class LeftPanel implements IDrawable {
         this.container.addChild(this.buildElementSeparator(205));
         this.container.addChild(playerName);
 
+        this.roundIDTxt = new PIXI.Text('', {
+            fill: 0xffffff, fontFamily: 'Times New Roman', fontSize: 18   
+        })
+        this.roundIDTxt.position.set(250, 95);
+
+        this.dealerNameTxt = new PIXI.Text('', {
+            fill: 0xffffff, fontFamily: 'Times New Roman', fontSize: 18   
+        })
+        this.dealerNameTxt.position.set(250, 175);
+
+        this.playerNameTxt = new PIXI.Text('', {
+            fill: 0xffffff, fontFamily: 'Times New Roman', fontSize: 18   
+        })
+        this.playerNameTxt.position.set(250, 175);
+
+        const gameNameTxt = new PIXI.Text('Roulette 1', {
+            fill: 0xffffff, fontFamily: 'Times New Roman', fontSize: 18   
+        })
+        gameNameTxt.position.set(250, 135);
+
+        this.container.addChild(this.roundIDTxt);
+        this.container.addChild(this.dealerNameTxt);
+        this.container.addChild(this.playerNameTxt);
+        this.container.addChild(gameNameTxt);
 
     }
 
@@ -88,5 +117,11 @@ export class LeftPanel implements IDrawable {
 
     getDisplayObject() {
         return this.container;
+    }
+
+    
+    updateGameState(gameState: any): void {
+        this.roundIDTxt.text = gameState.roundId;
+        this.dealerNameTxt.text = gameState.dealerName;
     }
 }

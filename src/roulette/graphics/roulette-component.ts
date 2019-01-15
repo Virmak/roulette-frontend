@@ -19,8 +19,10 @@ export abstract class RouletteComponent implements IDrawable {
     }
 
     highlight(highlightColor = 0x0086ae) {
-        this.sprite.alpha = 0.7;
-        this.sprite.filters = [new filters.OutlineFilter(1.5, highlightColor)];
+        //this.sprite.alpha = 0.7;
+        //this.sprite.filters = [new filters.OutlineFilter(3, highlightColor)];
+
+        this.sprite.filters = [ new filters.GlowFilter(10, 4, 0, 0x00ffff, 0.5), new filters.OutlineFilter(2, highlightColor),];
     }
     
     disableHighlight() {

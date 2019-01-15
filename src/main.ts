@@ -4,20 +4,62 @@ import { NumberSelector } from "./roulette/graphics/number-selector";
 import { ControlsMenu } from "./roulette/ui/controls-menu";
 import { RouletteUI } from "./roulette/ui/ui";
 import { ChipBuilder } from "./roulette/graphics/chip-builder";
+import { BetMenu } from "./roulette/graphics/menu/menu-builder";
+import { ChipSelector } from "./roulette/graphics/menu/chip-selector";
+import { Player } from "./roulette/player";
+import { SocketRouletteServer } from "./network/socket-roulette-server";
+import { LeftPanel } from "./roulette/ui/left-panel";
+import { RightPanel } from "./roulette/ui/right-panel";
+import { ProgressBar } from "./roulette/ui/progress-bar";
 
 window.addEventListener('DOMContentLoaded', () => {
-
-    PIXI.settings.RESOLUTION = 2;
-    const controls = new ControlsMenu(PIXI.utils.TextureCache);
-    const ui = new RouletteUI(PIXI.utils.TextureCache);
-
-    const chipBuilder = new ChipBuilder(PIXI.utils.TextureCache);
-
-    const numberSelector = new NumberSelector();
-    const rouletteTable = new RouletteTable(PIXI.utils.TextureCache, numberSelector, chipBuilder);
-    const rouletteGame = new RouletteGame(rouletteTable, controls, ui);
-    
+    init();
 });
+
+
+function init() {
+    
+    PIXI.settings.RESOLUTION = 2;
+    PIXI.loader
+    .add('images/dynamicBlueStandard.png')
+    .add('images/tableRimSilver.png')
+    .add('images/tableBorderBlack.png')
+    .add('images/ui-components.png')
+    .add('images/webCommon.png')
+    .add('images/webCommonSkinnable.png')
+    .load(() => {
+
+        
+        const leftPanel = new LeftPanel(PIXI.utils.TextureCache);
+        const rightPanel = new RightPanel(PIXI.utils.TextureCache);
+        const progressBar = new ProgressBar(PIXI.utils.TextureCache);
+        
+        const player = new Player();
+        const numberSelector = new NumberSelector();
+        const chipBuilder = new ChipBuilder(player, numberSelector);
+        const chipSelector = new ChipSelector(PIXI.utils.TextureCache, player);
+        const betMenu = new BetMenu(PIXI.utils.TextureCache, chipSelector);
+
+        betMenu.registerObserver(player);
+        betMenu.registerObserver(chipBuilder);
+
+        const controlsMenu = new ControlsMenu(PIXI.utils.TextureCache, betMenu, progressBar);
+        const ui = new RouletteUI(PIXI.utils.TextureCache, leftPanel, rightPanel);
+        const rouletteTable = new RouletteTable(PIXI.utils.TextureCache, numberSelector, chipBuilder, player);
+        const rouletteGame = new RouletteGame(rouletteTable, controlsMenu, ui);
+
+
+        chipBuilder.setState(true);
+        /*const rouletteService = new SocketRouletteServer(player, chipBuilder, controlsMenu);
+        rouletteService.registerObserver(leftPanel);
+        rouletteService.registerObserver(progressBar);
+        
+
+        rouletteGame.getApp().ticker.add(delta => {
+            progressBar.tick();
+        });*/
+    });
+}
 
 console.log('bootstrapping 2 ');
 

@@ -8,19 +8,21 @@ import { RouletteHitbox } from './roulette-hitbox';
 import { RouletteRaceTrack } from './roulette-racetrack';
 import { NumberSelector } from './number-selector';
 import { ChipBuilder } from './chip-builder';
+import { Player } from '../player';
 
 export class RouletteTable extends TilesheetBuilder{
 
     private interactive: boolean;
     private chipBuilder: ChipBuilder;
-
+    private player: Player;
     private numberSelector: NumberSelector;
     
-    constructor(textureCache: PIXI.Texture[], numberSelector: NumberSelector, chipBuilder: ChipBuilder) {
+    constructor(textureCache: PIXI.Texture[], numberSelector: NumberSelector, chipBuilder: ChipBuilder, player: Player) {
         super(textureCache, spritesData);
         this.numberSelector = numberSelector;
         this.chipBuilder = chipBuilder;
-        setTimeout(() => this.build(), 1000);
+        this.player = player;
+        this.build();
     }
 
     build(): void {
@@ -36,7 +38,7 @@ export class RouletteTable extends TilesheetBuilder{
                     new PIXI.Texture(
                         this.textureCache['images/dynamicBlueStandard.png'], 
                         new PIXI.Rectangle(spritesData[key].tx, spritesData[key].ty, spritesData[key].w, spritesData[key].h)
-                    ), spritesData[key]
+                    ), spritesData[key], this.textureCache
                 );
                 
                 this.tiles[key] = number;
@@ -48,7 +50,7 @@ export class RouletteTable extends TilesheetBuilder{
         this.numberSelector.setComponents(this.tiles)
         Object.keys(hitboxesData).forEach(key => {
             if (key !== 'default') {
-                 const hitBox = new RouletteHitbox(hitboxesData[key], key, this.numberSelector);
+                 const hitBox = new RouletteHitbox(hitboxesData[key], key, this.numberSelector, this.textureCache);
                  numbersBg.addChild(hitBox.getDisplayObject());
                  this.registerHitboxEvents(hitBox, key);
             }
@@ -64,7 +66,7 @@ export class RouletteTable extends TilesheetBuilder{
     private registerHitboxEvents(h: RouletteHitbox, key: string) {
         h.getContainer().interactive = true;
         h.getDisplayObject().on('click', () => {
-            this.chipBuilder.addChip(h, 1, key); 
+            this.chipBuilder.addChip(h, this.player.getSelectedChip(), key); 
         });
     }
 
@@ -80,12 +82,12 @@ export class RouletteTable extends TilesheetBuilder{
         });
 
         n.getDisplayObject().on('click', () => {
-            this.chipBuilder.addChip(n, 10, key);
+            this.chipBuilder.addChip(n, this.player.getSelectedChip(), key);
         });
     }
 
     private buildRaceTrack() {
-        const raceTrack = new RouletteRaceTrack(this.textureCache, this.numberSelector, this.chipBuilder);
+        const raceTrack = new RouletteRaceTrack(this.textureCache, this.numberSelector, this.chipBuilder, this.player);
         this.container.addChild(raceTrack.getDisplayObject());
     }
 

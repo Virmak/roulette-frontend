@@ -4,17 +4,20 @@ import { RacetrackNumber } from "./racetrack-number";
 import { Rectangle } from "pixi.js";
 import { NumberSelector } from "./number-selector";
 import { ChipBuilder } from "./chip-builder";
+import { Player } from "../player";
 
 export class RouletteRaceTrack extends TilesheetBuilder {
     private sprites: RacetrackNumber[];
     private numberSelector: NumberSelector;
     private chipBuilder: ChipBuilder;
+    private player: Player;
 
-    constructor(textureCache: PIXI.Texture[], numberSelector: NumberSelector, chipBuilder: ChipBuilder) {
+    constructor(textureCache: PIXI.Texture[], numberSelector: NumberSelector, chipBuilder: ChipBuilder, player: Player) {
         super(textureCache, spritesData);
         this.sprites = [];
         this.numberSelector = numberSelector;
         this.chipBuilder = chipBuilder;
+        this.player = player;
         this.build();
     }
 
@@ -42,7 +45,7 @@ export class RouletteRaceTrack extends TilesheetBuilder {
         Object.keys(spritesData).forEach(key => {
             const sprite = new RacetrackNumber(
                 new PIXI.Texture(this.textureCache['images/dynamicBlueStandard.png'], new Rectangle(spritesData[key].tx, spritesData[key].ty, spritesData[key].w, spritesData[key].h)),
-                spritesData[key]
+                spritesData[key], this.textureCache
             );
 
             this.sprites[key] = sprite;
@@ -65,7 +68,8 @@ export class RouletteRaceTrack extends TilesheetBuilder {
             });
 
             sprite.getDisplayObject().on('click', () => {
-                this.chipBuilder.addChip(sprite, 5, 'rt' + key);
+                this.numberSelector.groupSelector(spritesData[key].numbers,
+                    (s, n) => this.chipBuilder.addChip(s, this.player.getSelectedChip(), n));
             });
 
 

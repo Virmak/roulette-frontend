@@ -1,10 +1,13 @@
 import * as PIXI from 'pixi.js';
 import { IDrawable } from "../graphics/idrawable";
+import { IGameStateObserver } from '../../igame-state-observer';
 
-export class ProgressBar implements IDrawable {
+export class ProgressBar implements IDrawable, IGameStateObserver {
     private container: PIXI.Container;
     private textureCache: PIXI.Texture[];
     private progressMask: PIXI.Graphics;
+
+    private miliSecondsLeftToWait: number;
 
 
     constructor(textureCache: PIXI.Texture[]) {
@@ -54,4 +57,20 @@ export class ProgressBar implements IDrawable {
         return this.container;
     }
 
+    
+    updateGameState(gameState: any): void {
+        if (gameState.miliSecondsLeftToWait > 0) {
+            this.setProgress( gameState.miliSecondsLeftToWait / gameState.miliSecondsToWait);
+        } else {
+            this.setProgress(1);
+        }
+
+        this.miliSecondsLeftToWait = gameState.miliSecondsLeftToWait;
+    }
+
+    tick() {
+        if (this.miliSecondsLeftToWait > 0 && this.progressMask.width > 0) {
+             this.progressMask.width -= 0.30166666666;
+        }
+    }
 }

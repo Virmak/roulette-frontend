@@ -14,22 +14,23 @@ export class ControlsMenu implements IDrawable {
     private lastWinText: PIXI.Text;
     private textureCache: PIXI.Texture[];
     private progressBar: ProgressBar;
+    private betMenu: BetMenu;
 
     static textStyles = [
         {fontFamily : 'Times', fontSize: 16, fill : 0xffffff, align : 'center', fontWeight: '150'},
         {fontFamily : 'Times', fontSize: 16, fill : 0x93F763, align : 'center', fontWeight: '150'},
     ]
 
-    constructor(textureCache: PIXI.Texture[]) {
+    constructor(textureCache: PIXI.Texture[], betMenu: BetMenu, progressBar: ProgressBar) {
         this.textureCache = textureCache;
+        this.betMenu = betMenu;
+        this.progressBar = progressBar;
         this.container = new PIXI.Container();
         this.menuContainer = new PIXI.Container();
     }
 
     public init() {
-        const buttonsBuilder = new BetMenu(this.textureCache);
         this.drawBg();
-        this.progressBar = new ProgressBar(this.textureCache);
         
         this.container.addChild( this.progressBar.getDisplayObject());
         this.container.addChild(this.drawBalance(100));
@@ -37,9 +38,9 @@ export class ControlsMenu implements IDrawable {
         this.container.addChild(this.drawLastWin());
 
 
-        buttonsBuilder.getDisplayObject().x = 620;
+        this.betMenu.getDisplayObject().x = 620;
 
-        this.container.addChild(buttonsBuilder.getDisplayObject());
+        this.container.addChild(this.betMenu.getDisplayObject());
         this.container.y = 10;
         this.menuContainer.scale.y = .9;
         this.menuContainer.addChild(this.container);
@@ -99,6 +100,13 @@ export class ControlsMenu implements IDrawable {
     }
 
 
+    setLastWinText(text: string) {
+        this.lastWinText.text = text + ' EUR';
+    }
+
+    setBalanceText(balance: string) {
+        this.balanceText.text = balance + ' EUR';
+    }
 
     getDisplayObject(): PIXI.DisplayObject {
         return this.menuContainer;

@@ -6,18 +6,20 @@ import { RightPanel } from './right-panel';
 export class RouletteUI implements IDrawable {
     private textureCache: PIXI.Texture[];
     private container: PIXI.Container;
+    private leftPanel: LeftPanel;
+    private rightPanel: RightPanel;
 
-    constructor(textureCache: PIXI.Texture[]) {
+    constructor(textureCache: PIXI.Texture[], leftPanel: LeftPanel, rightPanel: RightPanel) {
         this.textureCache = textureCache;
+        this.leftPanel = leftPanel;
+        this.rightPanel = rightPanel;
         this.container = new PIXI.Container();
     }
 
     init() {
-        const leftPanel = new LeftPanel(this.textureCache);
-        const rightPanel = new RightPanel(this.textureCache);
         this.container.addChild(this.getVideoFrame());
-        this.container.addChild(leftPanel.getDisplayObject());
-        this.container.addChild(rightPanel.getDisplayObject());
+        this.container.addChild(this.leftPanel.getDisplayObject());
+        this.container.addChild(this.rightPanel.getDisplayObject());
     }
 
     private getVideoFrame() {

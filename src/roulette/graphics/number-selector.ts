@@ -31,7 +31,7 @@ export class NumberSelector {
 
     groupSelector(group, callback) {
         group.forEach((number) => {
-            callback(this.components[number]);
+            callback(this.components[number], number);
         });
     }
 

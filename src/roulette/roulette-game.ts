@@ -20,20 +20,7 @@ export class RouletteGame {
             backgroundColor: 0xaaaaaa
         });
         this.loader = PIXI.loader;
-        this.loadResources();
-    }
-
-    private loadResources() {
-        this.loader
-            .add('images/dynamicBlueStandard.png')
-            .add('images/tableRimSilver.png')
-            .add('images/tableBorderBlack.png')
-            .add('images/ui-components.png')
-            .add('images/webCommon.png')
-            .add('images/webCommonSkinnable.png')
-            .load(() => {
-                this.setup();
-            });
+        this.setup();
     }
 
     private setup() {
@@ -67,5 +54,9 @@ export class RouletteGame {
         
         this.app.renderer.resize(window.innerWidth, window.innerHeight);
         this.app.stage.scale.set(scaleFactor.x, scaleFactor.y); 
+    }
+
+    getApp(): PIXI.Application {
+        return this.app;
     }
 }

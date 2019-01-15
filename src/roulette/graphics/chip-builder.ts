@@ -2,40 +2,83 @@ import * as PIXI from 'pixi.js';
 import { IDrawable } from "./idrawable";
 import { RouletteNumber } from './roulette-number';
 import { Chip } from './chip';
-import { IContainer } from './icontainer';
+import { IPlayable } from './iplayable';
+import { IObserver } from '../../iobserver';
+import { Player } from '../player';
+import { NumberSelector } from './number-selector';
 
-export class ChipBuilder implements IDrawable {
+interface Bet {
+    value: number;
+    key: string;
+    chip: Chip;
+}
 
-    private textureCache: PIXI.Texture[];
+export class ChipBuilder implements IDrawable, IObserver {
+
     private container: PIXI.Container;
-    private chips: Chip[];
+    private player: Player;
+    private bets: Bet[];
+    private numberSelector: NumberSelector;
+    private enabled: boolean = false;
 
-    constructor(textureCache: PIXI.Texture[]) {
-        this.textureCache = textureCache;
+    constructor(player: Player, numberSelector: NumberSelector) {
+        this.player = player;
+        this.numberSelector = numberSelector;
         this.container = new PIXI.Container();
-        this.chips = [];
+        this.bets = [];
     }
 
 
-    addChip(n: IContainer, value: number, key: string) {
-        
-        if (this.chips[key] === undefined) {
-            const chip = new Chip(this.textureCache['images/webCommon.png'], value);
-            chip.setScale(.4);
-            chip.getDisplayObject().position.set(n.getContainer().width /2 - chip.getContainer().width / 2, n.getContainer().height / 2 - chip.getContainer().height / 2);
-            n.getContainer().addChildAt(chip.getDisplayObject(), 0);
-            this.chips[key] = chip;
-        } else {
-            this.chips[key].addValue(value);
+    addChip(n: IPlayable, value: number, key: string) {
+        if (this.enabled) {
+            this.bets.push({value, key, chip: n.addChip(value, key), });
+            this.player.addBet({key, value});
         }
     }
-    
 
-    getChipAt(key: string): Chip {
-        return this.chips[key];
+    popChip() {
+        if (this.enabled) { debugger;
+            const lastAddedChip = this.bets.pop();
+            if (lastAddedChip) {
+                lastAddedChip.chip.getRouletteNumber().removeChip(lastAddedChip.value);
+                this.player.removeBetAt(lastAddedChip.value, lastAddedChip.key);
+                /*
+                if (/^\d+(\-\d+)+$/.test(lastAddedChip.key)) {
+                    this.numberSelector.groupSelector(lastAddedChip.key.split('-'), (s, n) => {
+                        s.removeChip(lastAddedChip.value);
+                        this.player.removeBetAt(lastAddedChip.value, n);
+                    })
+                } else {
+                    lastAddedChip.chip.getRouletteNumber().removeChip(lastAddedChip.value);
+                    this.player.removeBetAt(lastAddedChip.value, lastAddedChip.key);
+                }*/
+            }
+        }
+    }
+
+    cancelBets() {
+        if (this.enabled) {
+            this.bets.forEach(bet => {
+                bet.chip.getRouletteNumber().resetBets();
+            });
+            this.bets = [];
+            this.player.clearBets();
+        }
+    }
+
+    setState(state: boolean) {
+        this.enabled = state;
     }
 
     getDisplayObject() {
         return this.container;
+    }
+    
+    receiveNotification(message: string): void {
+        if (message === 'undo') {
+            this.popChip();
+        } else if (message === 'cancel') {
+            this.cancelBets();
+        }
     }
 }

@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { IDrawable } from './idrawable';
+import { IPlayable } from './iplayable';
 
 export class Chip implements IDrawable {
     private baseTexture: PIXI.BaseTexture;
@@ -7,6 +8,7 @@ export class Chip implements IDrawable {
     private container: PIXI.Container;
     private chipText: PIXI.Text;
     private currentValue: number;
+    private rouletteNumber: IPlayable;
 
     private chipsPositions = {
         1: {x: 571, y:773},
@@ -18,8 +20,9 @@ export class Chip implements IDrawable {
         'MAX': {x: 334, y: 615}
     };
 
-    constructor(baseTexture: PIXI.BaseTexture, value: any) {
+    constructor(baseTexture: PIXI.BaseTexture, value: any, rouletteNumber?: IPlayable, fontSize = 18) {
         this.baseTexture = baseTexture;
+        this.rouletteNumber = rouletteNumber;
         this.container = new PIXI.Container();
         this.sprite = new PIXI.Sprite(new PIXI.Texture(
             this.baseTexture, new PIXI.Rectangle(
@@ -29,7 +32,8 @@ export class Chip implements IDrawable {
             )
         ));
         this.chipText = new PIXI.Text(value, {
-            fontSize: 20
+            fontSize: fontSize,
+            fontWeight: 'bold'
         });
         this.chipText.anchor.set(0.5);
         this.chipText.x = this.sprite.width / 2;
@@ -38,6 +42,10 @@ export class Chip implements IDrawable {
         this.container.addChildAt(this.chipText, 1);
 
         this.currentValue = value;
+    }
+
+    getCurrentValue() {
+        return this.currentValue;
     }
 
     setScale(x: number, y?: number) {
@@ -60,6 +68,10 @@ export class Chip implements IDrawable {
     addValue(value: number) {
         this.currentValue += value;
         this.setValue(this.currentValue);
+    }
+
+    getRouletteNumber(): IPlayable {
+        return this.rouletteNumber;
     }
 
     getChipFrameByValue(value) {

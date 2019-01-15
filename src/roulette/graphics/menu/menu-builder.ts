@@ -2,8 +2,10 @@ import * as PIXI from "pixi.js";
 import { IDrawable } from "../idrawable";
 import { MenuButton } from "./menu-button";
 import { ChipSelector } from "./chip-selector";
+import { IObserver } from "../../../iobserver";
+import { IObservable } from "../../../iobservable";
 
-export class BetMenu implements IDrawable{
+export class BetMenu implements IDrawable, IObservable {
     private container: PIXI.Container;
     private textureCache: PIXI.Texture[];
     private undoBtn: MenuButton;
@@ -11,15 +13,17 @@ export class BetMenu implements IDrawable{
     private cancelBtn: MenuButton;
     private chipSelector: ChipSelector;
 
-    constructor(textureCache: PIXI.Texture[]) {
+    private _observers: IObserver[] = [];
+
+    constructor(textureCache: PIXI.Texture[], chipSelector: ChipSelector) {
         this.textureCache = textureCache;
+        this.chipSelector = chipSelector;
         this.container = new PIXI.Container();
         this.buildButttons();
         this.buildChips();
     }
 
     buildChips() {
-        this.chipSelector = new ChipSelector(this.textureCache);
         this.container.addChild(this.chipSelector.getDisplayObject());
     }
 
@@ -34,11 +38,23 @@ export class BetMenu implements IDrawable{
             this.textureCache['images/webCommon.png'],
             new PIXI.Rectangle(423, 1093, 63, 74));
 
+        this.undoBtn.getDisplayObject().interactive = true;
+        this.cancelBtn.getDisplayObject().interactive = true;
+
+
         this.undoBtn.getDisplayObject().on('mouseover', () => {
 
         });
+        this.undoBtn.getDisplayObject().on('click', () => {
+            this.notifyObservers('undo');
+        });
+        
         this.replayBtn.getDisplayObject().on('mouseover', () => {
 
+        });
+        
+        this.cancelBtn.getDisplayObject().on('click', () => {
+            this.notifyObservers('cancel');
         });
         this.cancelBtn.getDisplayObject().on('mouseover', () => {
 
@@ -57,4 +73,19 @@ export class BetMenu implements IDrawable{
     }
 
 
+
+    
+    registerObserver(observer: IObserver) {
+        this._observers.push(observer);
+    }
+    removeObserver(observer: IObserver) {
+        for(let i = 0; i < this._observers.length; i++) {
+            if (observer === this._observers[i]) {
+                this._observers.splice(i, 1);
+            }
+        }
+    }
+    notifyObservers(message: string) {
+        this._observers.forEach(observer => observer.receiveNotification(message));
+    }
 }

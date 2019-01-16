@@ -1,16 +1,19 @@
 import { IBet } from "./ibet";
 import { IObserver } from "../iobserver";
+import { IObservable } from "../iobservable";
 
-export class Player implements IObserver {
+export class Player implements IObserver, IObservable {
     static chipValues = [1, 5, 10, 20, 50, 100, 'MAX'];
     private currentBets: any;
     private selectedChip: number;
     private playerName: string;
-
+    private totalBet: number;
+    private _observers: IObserver[] = [];
 
     constructor() {
         this.currentBets = {};
         this.selectedChip = 1;
+        this.totalBet = 0;
     }
 
     setSelectedChipIndex(value) {
@@ -31,6 +34,8 @@ export class Player implements IObserver {
         } else {
             this.currentBets[bet.key] = bet;
         }
+        this.totalBet += bet.value;
+        this.notifyObservers('update_bet', this.totalBet);
     }
 
     removeBetAt(value: number, key: string) {
@@ -39,6 +44,9 @@ export class Player implements IObserver {
             if (this.currentBets[key].value <= 0) {
                 delete this.currentBets[key];
             }
+            
+            this.totalBet -= value;
+            this.notifyObservers('update_bet', this.totalBet);
         }
     }
 
@@ -48,6 +56,8 @@ export class Player implements IObserver {
 
     clearBets() {
         this.currentBets = {};
+        this.totalBet = 0;
+        this.notifyObservers('update_bet', this.totalBet);
     }
 
     setPlayerName(name: string) {
@@ -61,6 +71,26 @@ export class Player implements IObserver {
     
     receiveNotification(message: string): void {
 
-        console.log(message);
+        //console.log(message);
+    }
+
+
+    
+    
+    
+    registerObserver(observer: IObserver) {
+        this._observers.push(observer);
+    }
+
+    removeObserver(observer: IObserver) {
+        for(let i = 0; i < this._observers.length; i++) {
+            if (observer === this._observers[i]) {
+                this._observers.splice(i, 1);
+            }
+        }
+    }
+    
+    notifyObservers(message: string, data?: any) {
+        this._observers.forEach(observer => observer.receiveNotification(message, data));
     }
 }

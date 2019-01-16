@@ -48,6 +48,7 @@ function init() {
         const rouletteTable = new RouletteTable(PIXI.utils.TextureCache, numberSelector, chipBuilder, player);
         const rouletteGame = new RouletteGame(rouletteTable, controlsMenu, ui);
 
+        player.registerObserver(controlsMenu);
 
         chipBuilder.setState(true);
         /*const rouletteService = new SocketRouletteServer(player, chipBuilder, controlsMenu);

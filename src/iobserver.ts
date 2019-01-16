@@ -1,3 +1,3 @@
 export interface IObserver {
-    receiveNotification(message: string): void;
+    receiveNotification(message: string, data?: any): void;
 }

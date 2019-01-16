@@ -42,16 +42,6 @@ export class ChipBuilder implements IDrawable, IObserver {
             if (lastAddedChip) {
                 lastAddedChip.chip.getRouletteNumber().removeChip(lastAddedChip.value);
                 this.player.removeBetAt(lastAddedChip.value, lastAddedChip.key);
-                /*
-                if (/^\d+(\-\d+)+$/.test(lastAddedChip.key)) {
-                    this.numberSelector.groupSelector(lastAddedChip.key.split('-'), (s, n) => {
-                        s.removeChip(lastAddedChip.value);
-                        this.player.removeBetAt(lastAddedChip.value, n);
-                    })
-                } else {
-                    lastAddedChip.chip.getRouletteNumber().removeChip(lastAddedChip.value);
-                    this.player.removeBetAt(lastAddedChip.value, lastAddedChip.key);
-                }*/
             }
         }
     }

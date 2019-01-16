@@ -2,9 +2,9 @@ import { IDrawable } from "../graphics/idrawable";
 import * as PIXI from 'pixi.js';
 import { ProgressBar } from "./progress-bar";
 import { BetMenu } from "../graphics/menu/menu-builder";
+import { IObserver } from "../../iobserver";
 
-export class ControlsMenu implements IDrawable {
-    
+export class ControlsMenu implements IDrawable, IObserver {
     private container: PIXI.Container;
 
     private menuContainer: PIXI.Container;
@@ -107,6 +107,10 @@ export class ControlsMenu implements IDrawable {
     setBalanceText(balance: string) {
         this.balanceText.text = balance + ' EUR';
     }
+    
+    setBetAmount(amount:Number) {
+        this.betAmountText.text = amount + ' EUR';
+    }
 
     getDisplayObject(): PIXI.DisplayObject {
         return this.menuContainer;
@@ -115,5 +119,15 @@ export class ControlsMenu implements IDrawable {
     getMenuContainer() {
         return this.menuContainer;
     }
+
+    
+    receiveNotification(message: string, data?: any): void {
+        if (message === 'update_bet') {
+            this.setBetAmount(data);
+        } else if (message === 'update_balance') {
+            this.setBalanceText(data);
+        }
+    }
+    
 
 }

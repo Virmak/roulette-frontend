@@ -71,13 +71,11 @@ export class BetMenu implements IDrawable, IObservable {
     getDisplayObject(): PIXI.DisplayObject {
         return this.container;
     }
-
-
-
     
     registerObserver(observer: IObserver) {
         this._observers.push(observer);
     }
+
     removeObserver(observer: IObserver) {
         for(let i = 0; i < this._observers.length; i++) {
             if (observer === this._observers[i]) {
@@ -85,6 +83,7 @@ export class BetMenu implements IDrawable, IObservable {
             }
         }
     }
+
     notifyObservers(message: string) {
         this._observers.forEach(observer => observer.receiveNotification(message));
     }

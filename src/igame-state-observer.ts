@@ -1,3 +1,3 @@
 export interface IGameStateObserver {
-    updateGameState(gameState: any): void;
+    updateGameState(gameState: any, message?: string): void;
 }

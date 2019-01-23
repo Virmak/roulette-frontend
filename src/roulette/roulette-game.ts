@@ -2,18 +2,21 @@ import * as PIXI from 'pixi.js'
 import { IDrawable } from './graphics/idrawable';
 import { ControlsMenu } from './ui/controls-menu';
 import { RouletteUI } from './ui/ui';
+import { RouletteNotifier } from './graphics/roulette-notifier';
 
 export class RouletteGame {
     private rouletteTable: IDrawable;
     private controlsMenu: ControlsMenu;
     private rouletteUI: RouletteUI;
+    private rouletteNotifier: RouletteNotifier;
     private loader: PIXI.loaders.Loader;
     private app: PIXI.Application;
     
-    constructor(rouletteTable: IDrawable, controlsMenu: ControlsMenu, ui: RouletteUI) {
+    constructor(rouletteTable: IDrawable, controlsMenu: ControlsMenu, ui: RouletteUI, rouletteNotifier: RouletteNotifier) {
         this.rouletteTable = rouletteTable;
         this.controlsMenu = controlsMenu;
         this.rouletteUI = ui;
+        this.rouletteNotifier = rouletteNotifier;
         this.app = new  PIXI.Application({
             width: 1386,
             height: 754,
@@ -39,6 +42,8 @@ export class RouletteGame {
         this.controlsMenu.getDisplayObject().y = 670;
         this.app.stage.addChild(this.controlsMenu.getDisplayObject());
         this.app.stage.addChild(this.rouletteUI.getDisplayObject());
+
+        this.app.stage.addChild(this.rouletteNotifier.getDisplayObject());
     }
 
     private resize(logicalWidth: number, logicalHeight: number) {

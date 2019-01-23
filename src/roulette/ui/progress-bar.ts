@@ -59,13 +59,15 @@ export class ProgressBar implements IDrawable, IGameStateObserver {
 
     
     updateGameState(gameState: any): void {
-        if (gameState.miliSecondsLeftToWait > 0) {
-            this.setProgress( gameState.miliSecondsLeftToWait / gameState.miliSecondsToWait);
-        } else {
-            this.setProgress(1);
-        }
+        if (gameState) {
+            if (gameState.miliSecondsLeftToWait > 0) {
+                this.setProgress( gameState.miliSecondsLeftToWait / gameState.miliSecondsToWait);
+            } else {
+                this.setProgress(1);
+            }
 
-        this.miliSecondsLeftToWait = gameState.miliSecondsLeftToWait;
+            this.miliSecondsLeftToWait = gameState.miliSecondsLeftToWait;
+        }
     }
 
     tick() {

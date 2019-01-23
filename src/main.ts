@@ -11,6 +11,7 @@ import { SocketRouletteServer } from "./network/socket-roulette-server";
 import { LeftPanel } from "./roulette/ui/left-panel";
 import { RightPanel } from "./roulette/ui/right-panel";
 import { ProgressBar } from "./roulette/ui/progress-bar";
+import { RouletteNotifier } from "./roulette/graphics/roulette-notifier";
 
 window.addEventListener('DOMContentLoaded', () => {
     init();
@@ -43,24 +44,27 @@ function init() {
         betMenu.registerObserver(player);
         betMenu.registerObserver(chipBuilder);
 
+
+        const rouletteNotifier = new RouletteNotifier(PIXI.utils.TextureCache, numberSelector);
+
         const controlsMenu = new ControlsMenu(PIXI.utils.TextureCache, betMenu, progressBar);
         const ui = new RouletteUI(PIXI.utils.TextureCache, leftPanel, rightPanel);
         const rouletteTable = new RouletteTable(PIXI.utils.TextureCache, numberSelector, chipBuilder, player);
-        const rouletteGame = new RouletteGame(rouletteTable, controlsMenu, ui);
-
+        const rouletteGame = new RouletteGame(rouletteTable, controlsMenu, ui, rouletteNotifier);
+        
         player.registerObserver(controlsMenu);
 
-        chipBuilder.setState(true);
-        /*const rouletteService = new SocketRouletteServer(player, chipBuilder, controlsMenu);
+        /*chipBuilder.setState(true);
+        rouletteNotifier.showResult(1);*/
+
+        const rouletteService = new SocketRouletteServer(player, chipBuilder, controlsMenu);
         rouletteService.registerObserver(leftPanel);
         rouletteService.registerObserver(progressBar);
-        
+        rouletteService.registerObserver(rouletteNotifier);
 
         rouletteGame.getApp().ticker.add(delta => {
             progressBar.tick();
-        });*/
+        });
     });
 }
-
-console.log('bootstrapping 2 ');
 

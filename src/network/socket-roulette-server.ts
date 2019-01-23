@@ -49,10 +49,19 @@ export class SocketRouletteServer implements IGameStateObservable {
         this.socket.on('wn', (a: any) => {
             if (a > 0) {
                 this.controlsMenu.setLastWinText(a);
+                this.notifyObservers(null, 'wn' + a);
             }
         });
+
+        this.socket.on('no_more_bets', () => { 
+            this.notifyObservers(null, 'no_more_bet');
+        });
+
+        this.socket.on('round_result', roundResult => {
+            this.notifyObservers(null, 'rr' + roundResult);
+        })
         
-        this.socket.on('accepting_bets', () => { console.log(this.player.getBets());
+        this.socket.on('accepting_bets', () => {
             this.chipBuilder.setState(false);
             this.sendBets(this.player.getBets());
         });
@@ -77,6 +86,7 @@ export class SocketRouletteServer implements IGameStateObservable {
                 this.chipBuilder.setState(true);
                 this.player.clearBets();
                 this.chipBuilder.cancelBets();
+                this.notifyObservers(gameState, 'place_bet');
             } else if (gameState.roundStatus === 3) {
                 // this.sendBets(this.game.getPlayer().getBets());
                 // this.game.setInteractive(false);
@@ -96,7 +106,7 @@ export class SocketRouletteServer implements IGameStateObservable {
     runLoop() {
         setTimeout(() => {
             this.idleTime += 2;
-            if (this.idleTime >= 60) { console.log('inactif');
+            if (this.idleTime >= 60) {
                 this.setActifState(false);
                 this.chipBuilder.setState(false);
                 return;
@@ -131,8 +141,8 @@ export class SocketRouletteServer implements IGameStateObservable {
         }
     }
 
-    notifyObservers(gameState: any) {
-        this.observers.forEach(observer => observer.updateGameState(gameState));
+    notifyObservers(gameState: any, message?: string) {
+        this.observers.forEach(observer => observer.updateGameState(gameState, message));
     }
 
 }

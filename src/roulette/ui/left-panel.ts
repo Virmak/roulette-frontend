@@ -121,7 +121,9 @@ export class LeftPanel implements IDrawable, IGameStateObserver {
 
     
     updateGameState(gameState: any): void {
-        this.roundIDTxt.text = gameState.roundId;
-        this.dealerNameTxt.text = gameState.dealerName;
+        if (gameState) {
+            this.roundIDTxt.text = gameState.roundId;
+            this.dealerNameTxt.text = gameState.dealerName;
+        }
     }
 }

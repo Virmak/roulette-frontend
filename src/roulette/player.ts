@@ -8,12 +8,14 @@ export class Player implements IObserver, IObservable {
     private selectedChip: number;
     private playerName: string;
     private totalBet: number;
+    private balance: number;
     private _observers: IObserver[] = [];
 
     constructor() {
         this.currentBets = {};
         this.selectedChip = 1;
         this.totalBet = 0;
+        this.setBalance(0);
     }
 
     setSelectedChipIndex(value) {
@@ -68,6 +70,14 @@ export class Player implements IObserver, IObservable {
         return this.playerName;
     }
 
+    getBalance(): number {
+        return this.balance;
+    }
+
+    setBalance(balance: number) {
+        this.balance = balance;
+        this.notifyObservers('update_balance', balance);
+    }
     
     receiveNotification(message: string): void {
 

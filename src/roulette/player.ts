@@ -3,18 +3,20 @@ import { IObserver } from "../iobserver";
 import { IObservable } from "../iobservable";
 
 export class Player implements IObserver, IObservable {
-    static chipValues = [1, 5, 10, 20, 50, 100, 'MAX'];
+    static chipValues = [1, 5, 10, 20, 50, 100, 999];
     private currentBets: any;
     private selectedChip: number;
     private playerName: string;
     private totalBet: number;
     private balance: number;
+    private lastBetValue: number;
     private _observers: IObserver[] = [];
 
     constructor() {
         this.currentBets = {};
         this.selectedChip = 1;
         this.totalBet = 0;
+        this.lastBetValue = 0;
         this.setBalance(0);
     }
 
@@ -27,6 +29,9 @@ export class Player implements IObserver, IObservable {
     }
 
     getSelectedChip() {
+        if (this.selectedChip === 999) {
+            return this.balance;
+        }
         return Player.chipValues[this.selectedChip];
     }
 
@@ -37,6 +42,7 @@ export class Player implements IObserver, IObservable {
             this.currentBets[bet.key] = bet;
         }
         this.totalBet += bet.value;
+        this.setBalance(this.balance - bet.value)
         this.notifyObservers('update_bet', this.totalBet);
     }
 
@@ -49,6 +55,7 @@ export class Player implements IObserver, IObservable {
             
             this.totalBet -= value;
             this.notifyObservers('update_bet', this.totalBet);
+            this.setBalance(this.balance + value);
         }
     }
 
@@ -56,7 +63,10 @@ export class Player implements IObserver, IObservable {
         return this.currentBets;
     }
 
-    clearBets() {
+    clearBets(updateBalance: boolean = false) {
+        if (updateBalance && this.totalBet > 0) {
+            this.setBalance(this.balance + this.totalBet);
+        }
         this.currentBets = {};
         this.totalBet = 0;
         this.notifyObservers('update_bet', this.totalBet);
@@ -80,7 +90,6 @@ export class Player implements IObserver, IObservable {
     }
     
     receiveNotification(message: string): void {
-
         //console.log(message);
     }
 

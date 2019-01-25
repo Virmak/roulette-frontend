@@ -31,13 +31,17 @@ export class ChipBuilder implements IDrawable, IObserver {
 
     addChip(n: IPlayable, value: number, key: string) {
         if (this.enabled) {
-            this.bets.push({value, key, chip: n.addChip(value, key), });
-            this.player.addBet({key, value});
+            if (this.player.getBalance() >= value) {
+                this.bets.push({value, key, chip: n.addChip(value, key), });
+                this.player.addBet({key, value});
+            } else {
+                console.log('insufficient funds');
+            }
         }
     }
 
     popChip() {
-        if (this.enabled) { debugger;
+        if (this.enabled) {
             const lastAddedChip = this.bets.pop();
             if (lastAddedChip) {
                 lastAddedChip.chip.getRouletteNumber().removeChip(lastAddedChip.value);
@@ -52,7 +56,7 @@ export class ChipBuilder implements IDrawable, IObserver {
                 bet.chip.getRouletteNumber().resetBets();
             });
             this.bets = [];
-            this.player.clearBets();
+            this.player.clearBets(true);
         }
     }
 

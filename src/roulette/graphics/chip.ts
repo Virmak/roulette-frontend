@@ -17,7 +17,7 @@ export class Chip implements IDrawable {
         20: {x: 413, y:694},
         50: {x: 413, y:615},
         100: {x: 492, y:615},
-        'MAX': {x: 334, y: 615}
+        999: {x: 334, y: 615}
     };
 
     constructor(baseTexture: PIXI.BaseTexture, value: any, rouletteNumber?: IPlayable, fontSize = 18) {
@@ -31,7 +31,7 @@ export class Chip implements IDrawable {
                 74, 74
             )
         ));
-        this.chipText = new PIXI.Text(value, {
+        this.chipText = new PIXI.Text(value === 999 ? 'MAX' : value, {
             fontSize: fontSize,
             fontWeight: 'bold'
         });

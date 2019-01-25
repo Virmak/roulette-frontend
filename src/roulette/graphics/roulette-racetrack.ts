@@ -68,6 +68,10 @@ export class RouletteRaceTrack extends TilesheetBuilder {
             });
 
             sprite.getDisplayObject().on('click', () => {
+                if (spritesData[key].numbers.length * this.player.getSelectedChip() > this.player.getBalance()) {
+                    console.log('insufficient funds');
+                    return;
+                }
                 this.numberSelector.groupSelector(spritesData[key].numbers,
                     (s, n) => this.chipBuilder.addChip(s, this.player.getSelectedChip(), n));
             });

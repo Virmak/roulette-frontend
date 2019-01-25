@@ -4,7 +4,7 @@ import { NumberSelector } from "./roulette/graphics/number-selector";
 import { ControlsMenu } from "./roulette/ui/controls-menu";
 import { RouletteUI } from "./roulette/ui/ui";
 import { ChipBuilder } from "./roulette/graphics/chip-builder";
-import { BetMenu } from "./roulette/graphics/menu/menu-builder";
+import { BetMenu } from "./roulette/graphics/menu/bet-menu";
 import { ChipSelector } from "./roulette/graphics/menu/chip-selector";
 import { Player } from "./roulette/player";
 import { SocketRouletteServer } from "./network/socket-roulette-server";
@@ -53,10 +53,11 @@ function init() {
         const rouletteGame = new RouletteGame(rouletteTable, controlsMenu, ui, rouletteNotifier);
         
         player.registerObserver(controlsMenu);
+        /*
+        chipBuilder.setState(true);
+        rouletteNotifier.showResult(1);
 
-        /*chipBuilder.setState(true);
-        rouletteNotifier.showResult(1);*/
-
+        player.setBalance(9);*/
         const rouletteService = new SocketRouletteServer(player, chipBuilder, controlsMenu);
         rouletteService.registerObserver(leftPanel);
         rouletteService.registerObserver(progressBar);

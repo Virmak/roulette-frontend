@@ -21,7 +21,7 @@ export class ChipSelector implements IDrawable{
 
     buildChips() {
         let xCounter = 0;
-        this.chips = [1, 5, 10, 20, 50, 100, 'MAX'].map((chipValue, index) => {    
+        this.chips = [1, 5, 10, 20, 50, 100, 999].map((chipValue, index) => {    
             const chip = new Chip(this.textureCache['images/webCommon.png'], chipValue);
             chip.getDisplayObject().x = xCounter;
             this.container.addChild(chip.getDisplayObject());

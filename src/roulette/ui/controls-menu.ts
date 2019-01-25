@@ -1,7 +1,7 @@
 import { IDrawable } from "../graphics/idrawable";
 import * as PIXI from 'pixi.js';
 import { ProgressBar } from "./progress-bar";
-import { BetMenu } from "../graphics/menu/menu-builder";
+import { BetMenu } from "../graphics/menu/bet-menu";
 import { IObserver } from "../../iobserver";
 
 export class ControlsMenu implements IDrawable, IObserver {

@@ -133,7 +133,10 @@ export class RouletteNotifier implements IDrawable, IGameStateObserver {
         } else if (message === 'place_bet') {
             this.resultPin.destroy();
             this.showMessage('Place your bets');
-        } else if (/wn\d+(\.\d+)?/.test(message)) {
+        } else if (message === 'br') {
+            this.showMessage('Bets refused');
+        } 
+        else if (/wn\d+(\.\d+)?/.test(message)) {
             this.showWinnings(parseInt(message.replace('wn', '')));
         } else if (/^rr\d+$/.test(message)) {
             this.showResult(parseInt(message.replace('rr', '')));

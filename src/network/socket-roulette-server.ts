@@ -69,6 +69,11 @@ export class SocketRouletteServer implements IGameStateObservable {
         this.socket.on('ub', b =>  {
             this.player.setBalance(b);
         });
+
+        this.socket.on('br', (b) => {
+            this.player.setBalance(b);
+            this.notifyObservers(null, 'br');
+        })
         
         this.socket.on('disconnect', function() {
             this.chipBuilder.setState(false);

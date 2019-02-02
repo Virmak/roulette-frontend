@@ -55,6 +55,7 @@ export class SocketRouletteServer implements IGameStateObservable {
 
         this.socket.on('no_more_bets', () => { 
             this.notifyObservers(null, 'no_more_bet');
+            this.chipBuilder.setState(false);
         });
 
         this.socket.on('round_result', roundResult => {
@@ -73,6 +74,10 @@ export class SocketRouletteServer implements IGameStateObservable {
         this.socket.on('br', (b) => {
             this.player.setBalance(b);
             this.notifyObservers(null, 'br');
+        })
+
+        this.socket.on('ba', () => {
+            this.notifyObservers(null, 'ba');
         })
         
         this.socket.on('disconnect', function() {

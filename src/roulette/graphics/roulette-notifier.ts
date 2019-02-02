@@ -108,9 +108,11 @@ export class RouletteNotifier implements IDrawable, IGameStateObserver {
     }
 
     showMessage(message: string) {
-        this.messageText.text = message;
-        this.messageText.visible = true;
-        setTimeout(() => this.messageText.visible = false, 2000);
+        setTimeout(() => {
+            this.messageText.text = message;
+            this.messageText.visible = true;
+            setTimeout(() => this.messageText.visible = false, 3000);
+        }, 0);
     }
 
     showWinnings(winnings: number) {
@@ -135,7 +137,9 @@ export class RouletteNotifier implements IDrawable, IGameStateObserver {
             this.showMessage('Place your bets');
         } else if (message === 'br') {
             this.showMessage('Bets refused');
-        } 
+        } else if (message === 'ba') {
+            this.showMessage('Bets Accepted');
+        }
         else if (/wn\d+(\.\d+)?/.test(message)) {
             this.showWinnings(parseInt(message.replace('wn', '')));
         } else if (/^rr\d+$/.test(message)) {

@@ -1,16 +1,18 @@
 import { IDrawable } from "../graphics/idrawable";
-import { Texture, Container, Sprite } from "pixi.js";
+import { Texture, Container, Sprite, Rectangle } from "pixi.js";
 import { IGameStateObserver } from "../../igame-state-observer";
 import * as SpritesData from '../graphics/sprites-data/xpg-sprites.json';
 
 export class RightPanel implements IDrawable, IGameStateObserver {
     private container: Container;
     private rightPanelBg: Sprite;
+    private statsPanel: IDrawable;
     private textureCache: Texture[];
     private pastResultDisplay: Sprite;
 
     
-    constructor(textureCache: PIXI.Texture[]) {
+    constructor(statsPanel: IDrawable, textureCache: PIXI.Texture[]) {
+        this.statsPanel = statsPanel;
         this.textureCache = textureCache;
         this.container = new Container();
         this.build();
@@ -25,8 +27,7 @@ export class RightPanel implements IDrawable, IGameStateObserver {
         this.rightPanelBg.y = 50;
         this.rightPanelBg.width = 355;
         this.rightPanelBg.height = 220;
-        this.rightPanelBg.visible = false;
-
+        this.rightPanelBg.addChild(this.statsPanel.getDisplayObject());
         const vipSpote = new PIXI.Sprite(new PIXI.Texture(
             this.textureCache['images/webCommon.png'], new PIXI.Rectangle(108, 283, 146, 53)));
         vipSpote.x = 1120;
@@ -46,14 +47,6 @@ export class RightPanel implements IDrawable, IGameStateObserver {
         });
 
         
-        const rect = new PIXI.Graphics();
-        rect.beginFill(0x3a3a3a);
-        rect.drawRoundedRect(13, 13, 390, 260, 5);
-        rect.endFill();
-
-
-        this.rightPanelBg.addChild(rect);
-        
         this.container.addChild(vipSpote);
         this.container.addChild(this.rightPanelBg);
         this.container.addChild(betListIcon);
@@ -62,10 +55,6 @@ export class RightPanel implements IDrawable, IGameStateObserver {
 
     private buildMaxBetTab() {
         
-    }
-
-    private buildStatsPanel() {
-
     }
 
     private buildHistoryDisplay() {

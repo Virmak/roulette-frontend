@@ -84,8 +84,10 @@ export class RouletteHitbox implements IDrawable, IPlayable {
     
 
     resetBets() {
-        this.chip.getDisplayObject().destroy();
-        this.chip = undefined;
+        if (this.chip) {
+            this.chip.getDisplayObject().destroy();
+            this.chip = undefined;
+        }
         this.betValue = 0;
     }
 }

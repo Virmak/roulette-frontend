@@ -54,7 +54,7 @@ function init() {
         const rouletteGame = new RouletteGame(rouletteTable, controlsMenu, ui, rouletteNotifier);
         
         player.registerObserver(controlsMenu);
-        
+        /*
         chipBuilder.setState(true);
         rouletteNotifier.showResult(1);
 
@@ -62,7 +62,8 @@ function init() {
 
         const g = {"roundId":79457939,"roundStatus":3,"dealerName":"Ciara A.","roundResult":-1,"winningBettingPoints":null,"winAmount":0.0,"currentBalance":0.0,"balanceUpdateTimestamp":"636847429509669874","balanceSequence":297886,"gameSequence":297916,"streamSequence":0,"specialGameStatusCode":0,"miliSecondsToWait":30000,"miliSecondsLeftToWait":-7282,"videoTimeCode":"1549146153619","updateTimeStamp":"636847429542429793","prevRound":null,"stats":{"roundsNo":300,"pastResults":[16,29,1,20,8,30,13,17,23,20,8,17],"hotNumbers":[21,25,36,32,6,2],"hotNumbersCount":[14,14,13,13,12,12],"coldNumbers":[23,1,12,22,18,21],"coldNumbersCount":[168,137,131,70,65,64],"redPct":48.00,"blackPct":50.0,"zeroPct":2.00,"oddPct":47.666666666666666666666666670,"evenPct":50.333333333333333333333333330},"activeStreams":[{"qualityClass":1,"activeStreamIndex":0},{"qualityClass":2,"activeStreamIndex":0},{"qualityClass":3,"activeStreamIndex":0}]};
         rightPanel.updateGameState(g);
-        /*
+        */
+        
         const rouletteService = new SocketRouletteServer(player, chipBuilder, controlsMenu);
         rouletteService.registerObserver(leftPanel);
         rouletteService.registerObserver(rightPanel);
@@ -71,7 +72,7 @@ function init() {
 
         rouletteGame.getApp().ticker.add(delta => {
             progressBar.tick();
-        });*/
+        });
     });
 }
 

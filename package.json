@@ -4,31 +4,33 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "@types/socket.io-client": "^1.4.32",
-    "@types/whatwg-fetch": "0.0.33",
-    "pixi-filters": "^2.6.2",
+    "pixi-filters": "^2.7.0",
     "pixi.js": "^4.8.4",
     "socket.io-client": "^2.2.0",
-    "swfobject": "^2.2.1",
-    "whatwg-fetch": "^3.0.0"
+    "swfobject": "^2.2.1"
   },
   "devDependencies": {
     "@types/pixi.js": "^4.8.6",
+    "@types/socket.io-client": "^1.4.32",
     "browserify": "^16.2.3",
     "eslint-config-google": "^0.11.0",
     "gulp": "^4.0.0",
     "gulp-connect": "^5.7.0",
     "gulp-typescript": "^5.0.0",
     "gulp-util": "^3.0.8",
+    "ts-loader": "^5.3.3",
     "tsify": "^4.0.1",
-    "typescript": "^3.2.2",
+    "typescript": "^3.3.3",
     "vinyl-source-stream": "^2.0.0",
-    "watchify": "^3.11.0"
+    "watchify": "^3.11.0",
+    "webpack": "^4.29.3",
+    "webpack-cli": "^3.2.3"
   },
   "scripts": {
     "compile": "tsc && browserify dist/main.js > public/bundle.js",
     "watch": "watchify main.ts -p [tsify --noImplicitAny] > public/bundle.js",
     "serve": "http-server -c-1 ./public/",
+    "build": "webpack --config webpack.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

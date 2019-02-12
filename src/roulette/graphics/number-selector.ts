@@ -80,7 +80,7 @@ export class NumberSelector {
             this.rowSelector(row, callback);
         }
         else if (/^\d.*?12$/.test(key)) {
-            this.rangeSelector(key[0] * 12 - 11, key[0] * 12, callback);
+            this.rangeSelector(+key[0] * 12 - 11, +key[0] * 12, callback);
         } else if (/^black|red$/.test(key)) {
             this.colorSelector(key, callback);
         }

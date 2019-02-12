@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { IDrawable } from './idrawable';
 import { TilesheetBuilder } from './tilesheet-builder';
-import * as spritesData from './sprites-data/xpg-sprites';
+import * as spritesData from './sprites-data/xpg-sprites.json';
 import * as hitboxesData from './sprites-data/hitboxes.json';
 import { RouletteNumber } from './roulette-number';
 import { RouletteHitbox } from './roulette-hitbox';
@@ -46,7 +46,7 @@ export class RouletteTable extends TilesheetBuilder{
                 this.registerNumberEvents(number, key);
             }
         });
-        this.numberSelector.setSpritesData(spritesData);
+        this.numberSelector.setSpritesData(spritesData as any);
         this.numberSelector.setComponents(this.tiles)
         Object.keys(hitboxesData).forEach(key => {
             if (key !== 'default') {

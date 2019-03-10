@@ -1,13 +1,20 @@
 const path = require('path');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
-  entry: './src/main.ts',
+  entry: ['./src/main.ts'],
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/
+        'test': /\.tsx?$/,
+        'loaders': ['babel-loader','ts-loader'],
+        'exclude': [/node_modules/]
+      },
+      // babel-loader for pure javascript (es6) => javascript (es5)
+      {
+        'test': /\.(jsx?)$/,
+        'loaders': ['babel'],
+        'exclude': [/node_modules/]
       }
     ]
   },
@@ -17,5 +24,8 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist')
-  }
+  },
+  optimization: {
+    minimizer: [new UglifyJsPlugin()],
+  },
 };

@@ -54,6 +54,9 @@ function init() {
         const rouletteGame = new RouletteGame(rouletteTable, controlsMenu, ui, rouletteNotifier);
         
         player.registerObserver(controlsMenu);
+
+        document.querySelector('.loading-gif').remove();
+        (<HTMLElement>document.querySelector('.rplayer')).style.display = 'block';
         /*
         chipBuilder.setState(true);
         rouletteNotifier.showResult(1);

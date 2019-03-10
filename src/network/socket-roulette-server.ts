@@ -80,8 +80,10 @@ export class SocketRouletteServer implements IGameStateObservable {
             this.notifyObservers(null, 'ba');
         })
         
-        this.socket.on('disconnect', function() {
+        this.socket.on('disconnect', () => {
             this.chipBuilder.setState(false);
+            (<HTMLElement>document.querySelector('.warning')).style.display = 'block';
+            (<HTMLElement>document.querySelector('.rplayer')).style.display = 'none';
         });
     }
 
@@ -138,7 +140,7 @@ export class SocketRouletteServer implements IGameStateObservable {
             this.idleTime = 0;
         });
 
-        this.socket = io('http://127.0.0.1:3000');
+        this.socket = io('http://roulette.365.ovh');
     }
 
 
